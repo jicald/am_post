@@ -1,4 +1,5 @@
 import fs from "fs";
+import { fetchScreenshotUrl } from "./screenshot.js";
 
 const works = [
   "アールエス",
@@ -8,53 +9,33 @@ const works = [
   "タイムアタックRPG"
 ];
 
-const viewpoints = [
-  "世界観に注目",
-  "システム重視",
-  "初見プレイヤー目線",
-  "独特な設計",
-  "自由度の高さ",
-  "UIや操作性"
-];
-
-const templates = [
-  (w, v) => `作品名「${w}」。
-
-今回は「${v}」の視点で紹介する。
-
-一般的なRPGとは異なる構造を持ち、プレイヤーごとに体験が変化するタイプの作品。
-
-遊び方そのものに個性があり、探索の自由度が高い点が特徴。`,
-
-  (w, v) => `「${w}」について「${v}」の観点で見ると、
-この作品は通常のゲーム構造に収まらない設計が特徴的。
-
-進行や体験が固定されておらず、プレイヤーの選択によって印象が大きく変化する。`,
-
-  (w, v) => `フリーゲーム「${w}」。
-
-今回は「${v}」を軸に紹介。
-
-シンプルな形式に見えて、内部はかなり独自性が強く、一般的なRPGとは異なる体験設計になっている。`
-];
-
 function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function generatePost(work) {
-  const view = pick(viewpoints);
-  const tpl = pick(templates);
+function generatePost(title, imageUrl) {
+  return `【アンディーメンテ作品紹介】
 
-  return tpl(work, view);
+作品名：${title}
+
+スクリーンショット：
+${imageUrl}
+
+独特な構造を持つフリーゲーム作品。
+
+診断メーカーを利用した自動生成投稿です。
+
+#アンディーメンテ
+#フリーゲーム`;
 }
 
-const work = pick(works);
-const post = generatePost(work);
+const title = pick(works);
+const imageUrl = await fetchScreenshotUrl(title);
+
+const post = generatePost(title, imageUrl);
 
 console.log(post);
 
-// 保存
 fs.mkdirSync("posts", { recursive: true });
 
 const date = new Date().toISOString().slice(0, 10);
