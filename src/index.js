@@ -30,10 +30,14 @@ ${imageUrl}
 }
 
 const title = pick(works);
+
+console.log("選択された作品:", title);
+
 const imageUrl = await fetchScreenshotUrl(title);
 
-const post = generatePost(title, imageUrl);
+console.log("取得した画像URL:", imageUrl);
 
+const post = generatePost(title, imageUrl);
 console.log(post);
 
 fs.mkdirSync("posts", { recursive: true });
