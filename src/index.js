@@ -1,43 +1,32 @@
 import fs from "fs";
-import { fetchScreenshotUrl } from "./screenshot.js";
+import { fetchScreenshotByName } from "./screenshot.js";
+import { generateSeed } from "./random.js";
 
-const works = [
-  "アールエス",
-  "イストワール",
-  "シルフェイド見聞録",
-  "グロリアスドーン",
-  "タイムアタックRPG"
-];
+function generatePost(result, seed) {
+  return `【アンディーメンテ診断結果】
 
-function pick(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+入力ID：
+${seed}
 
-function generatePost(title, imageUrl) {
-  return `【アンディーメンテ作品紹介】
-
-作品名：${title}
+診断タイトル：
+${result.title}
 
 スクリーンショット：
-${imageUrl}
+${result.image}
 
-独特な構造を持つフリーゲーム作品。
+自動生成結果です。
 
-診断メーカーを利用した自動生成投稿です。
-
-#アンディーメンテ
-#フリーゲーム`;
+#アンディーメンテ`;
 }
 
-const title = pick(works);
+const seed = generateSeed(12);
 
-console.log("選択された作品:", title);
+console.log("生成されたユーザー名:", seed);
 
-const imageUrl = await fetchScreenshotUrl(title);
+const result = await fetchScreenshotByName(seed);
 
-console.log("取得した画像URL:", imageUrl);
+const post = generatePost(result, seed);
 
-const post = generatePost(title, imageUrl);
 console.log(post);
 
 fs.mkdirSync("posts", { recursive: true });
